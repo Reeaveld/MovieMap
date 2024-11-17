@@ -4,7 +4,6 @@
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
-    <ion-title>Popular</ion-title>
     <ion-buttons slot="end">
       <ion-button>
         <ion-icon name="search-outline"></ion-icon>
@@ -13,28 +12,23 @@
   </ion-toolbar>
 
   <ion-segment [(ngModel)]="selectedSegment" color="success">
-    <ion-segment-button value="FILMS">
-      <ion-label>FILM</ion-label>
-    </ion-segment-button>
     <ion-segment-button value="REVIEWS">
       <ion-label>ULASAN</ion-label>
-    </ion-segment-button>
-    <ion-segment-button value="LISTS">
-      <ion-label>LIST</ion-label>
-    </ion-segment-button>
-    <ion-segment-button value="JOURNAL">
-      <ion-label>ARTIKEL</ion-label>
     </ion-segment-button>
   </ion-segment>
 </ion-header>
 
 <ion-content [fullscreen]="true" color="dark">
   <div class="reviews-container" *ngIf="selectedSegment === 'REVIEWS'">
-    <h2 class="section-title">Popular this week</h2>
+    <h2 class="section-title">Populer Minggu Ini</h2>
+    
+    <div class="error-message" *ngIf="error">
+      {{ error }}
+    </div>
     
     <div class="review-card" *ngFor="let review of reviews">
       <div class="review-header">
-        <div class="movie-info">
+        <div class="movie-info" (click)="goToMovieDetail(review.imdbID)">
           <h3>{{ review.movieTitle }} <span class="year">{{ review.year }}</span></h3>
         </div>
         <div class="reviewer-info">
@@ -46,8 +40,11 @@
       </div>
 
       <div class="review-content">
-        <div class="poster-container">
-          <img [src]="review.posterUrl" [alt]="review.movieTitle + ' poster'" class="movie-poster">
+        <div class="poster-container" (click)="goToMovieDetail(review.imdbID)">
+          <img [src]="review.posterUrl" 
+               [alt]="review.movieTitle + ' poster'" 
+               class="movie-poster"
+               (error)="review.posterUrl = 'assets/placeholder-poster.jpg'">
           <div class="rating" *ngIf="review.rating">
             <div class="stars">
               <ion-icon 
